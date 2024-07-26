@@ -1,22 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+
+use App\Models\Kategori;
 use Illuminate\Http\Request;
-use App\Models\kategori;
 use Validator;
+
 class KategoriController extends Controller
 {
     public function index(){
         $kategori = Kategori::latest()->get();
         $response = [
-            'success' => true,
+            'success' =>true,
             'message' => 'Data Kategori',
             'data' => $kategori,
         ];
         return response()->json($response, 200);
     }
+
     public function store(Request $request)
     {
         //validasi
@@ -31,9 +34,9 @@ class KategoriController extends Controller
                 'success' => false,
                 'message' => 'Silahkan isi dengan benar',
                 'data' => $validator->errors(),
-            ], 400);
+            ], 401);
         } else {
-            $kategori = new kategori;
+            $kategori = new Kategori;
             $kategori->nama_kategori = $request->nama_kategori;
             $kategori->save();
         }
@@ -41,7 +44,7 @@ class KategoriController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'data berhasil di simpan',
-            ], 201);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -50,22 +53,22 @@ class KategoriController extends Controller
         }
     }
 
-    public function show($id){
+    public function show($id) {
         $kategori = Kategori::find($id);
 
         if ($kategori){
             return response()->json([
-                'success' => true,
-                'message' => 'Detail kategori',
+                'success' =>true,
+                'message' => 'Detail Kategori',
                 'data' => $kategori,
             ], 200);
         } else {
             return response()->json([
-                'success' => false,
-                'message' => 'Kategori tidak di temukan',
-
+                'success' =>false,
+                'message' => 'Kategori tidak ditemukan ',
             ], 404);
         }
+
     }
 
     public function update(Request $request, $id)
@@ -82,7 +85,7 @@ class KategoriController extends Controller
                 'success' => false,
                 'message' => 'Silahkan isi dengan benar',
                 'data' => $validator->errors(),
-            ], 400);
+            ], 401);
         } else {
             $kategori = Kategori::find($id);
             $kategori->nama_kategori = $request->nama_kategori;
@@ -91,30 +94,31 @@ class KategoriController extends Controller
         if ($kategori) {
             return response()->json([
                 'success' => true,
-                'message' => 'data berhasil di update',
-            ], 201);
+                'message' => 'data berhasil di perbarui',
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
-                'message' => 'data gagal di update',
+                'message' => 'data gagal di perbarui',
             ], 400);
         }
     }
 
     public function destroy($id){
         $kategori = Kategori::find($id);
+
         if ($kategori) {
-            $kategori->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'data ' . $kategori->nama_kategori . ' berhasil di hapus',
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'data tidak di temukan',
-            ], 404);
-        }
+        $kategori->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'data' . $kategori->nama_kategori . ' berhasil di hapus',
+        ], 200);
+    } else {
+        return response()->json([
+            'success' => true,
+            'message' => 'data tidak ditemukan',
+        ], 404);
+    }
 
     }
 
