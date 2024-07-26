@@ -33,7 +33,7 @@ class KategoriController extends Controller
                 'data' => $validator->errors(),
             ], 400);
         } else {
-            $kategori = new Kategori;
+            $kategori = new kategori;
             $kategori->nama_kategori = $request->nama_kategori;
             $kategori->save();
         }
