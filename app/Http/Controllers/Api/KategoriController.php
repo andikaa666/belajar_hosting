@@ -3,23 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-
-use App\Models\Kategori;
 use Illuminate\Http\Request;
+use App\Models\kategori;
 use Validator;
-
 class KategoriController extends Controller
 {
     public function index(){
         $kategori = Kategori::latest()->get();
         $response = [
-            'success' =>true,
+            'success' => true,
             'message' => 'Data Kategori',
             'data' => $kategori,
         ];
         return response()->json($response, 200);
     }
-
     public function store(Request $request)
     {
         //validasi
@@ -34,7 +31,7 @@ class KategoriController extends Controller
                 'success' => false,
                 'message' => 'Silahkan isi dengan benar',
                 'data' => $validator->errors(),
-            ], 401);
+            ], 400);
         } else {
             $kategori = new Kategori;
             $kategori->nama_kategori = $request->nama_kategori;
@@ -44,7 +41,7 @@ class KategoriController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'data berhasil di simpan',
-            ], 200);
+            ], 201);
         } else {
             return response()->json([
                 'success' => true,
@@ -53,22 +50,22 @@ class KategoriController extends Controller
         }
     }
 
-    public function show($id) {
+    public function show($id){
         $kategori = Kategori::find($id);
 
         if ($kategori){
             return response()->json([
-                'success' =>true,
-                'message' => 'Detail Kategori',
+                'success' => true,
+                'message' => 'Detail kategori',
                 'data' => $kategori,
             ], 200);
         } else {
             return response()->json([
-                'success' =>false,
-                'message' => 'Kategori tidak ditemukan ',
+                'success' => false,
+                'message' => 'Kategori tidak di temukan',
+
             ], 404);
         }
-
     }
 
     public function update(Request $request, $id)
@@ -85,7 +82,7 @@ class KategoriController extends Controller
                 'success' => false,
                 'message' => 'Silahkan isi dengan benar',
                 'data' => $validator->errors(),
-            ], 401);
+            ], 400);
         } else {
             $kategori = Kategori::find($id);
             $kategori->nama_kategori = $request->nama_kategori;
@@ -94,31 +91,30 @@ class KategoriController extends Controller
         if ($kategori) {
             return response()->json([
                 'success' => true,
-                'message' => 'data berhasil di perbarui',
-            ], 200);
+                'message' => 'data berhasil di update',
+            ], 201);
         } else {
             return response()->json([
                 'success' => true,
-                'message' => 'data gagal di perbarui',
+                'message' => 'data gagal di update',
             ], 400);
         }
     }
 
     public function destroy($id){
         $kategori = Kategori::find($id);
-
         if ($kategori) {
-        $kategori->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'data' . $kategori->nama_kategori . ' berhasil di hapus',
-        ], 200);
-    } else {
-        return response()->json([
-            'success' => true,
-            'message' => 'data tidak ditemukan',
-        ], 404);
-    }
+            $kategori->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'data ' . $kategori->nama_kategori . ' berhasil di hapus',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'data tidak di temukan',
+            ], 404);
+        }
 
     }
 
